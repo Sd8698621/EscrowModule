@@ -47,5 +47,4 @@ This project implements a simple **escrow system** on the Aptos blockchain using
 ```bash
 aptos move compile
 aptos move publish --profile default
-'''
 
