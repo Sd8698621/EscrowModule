@@ -1,0 +1,16 @@
+[package]
+name = "aptos-project"
+version = "1.0.0"
+authors = []
+
+[addresses]
+HelloMessage = "0x2f53a0e4f5aea0bd1c7c9be2dca280794a6fb927af6278b1c6cc61d952578f91"
+EscrowModule = "0x2f53a0e4f5aea0bd1c7c9be2dca280794a6fb927af6278b1c6cc61d952578f91"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
