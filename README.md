@@ -1,92 +1,51 @@
-Aptos Escrow-Based Vendor Payout Smart Contract
-Overview
-This project implements a simple yet secure escrow-based vendor payout system on the Aptos blockchain. The smart contract facilitates transactions between buyers and vendors by holding funds in escrow until specified conditions are met, providing security and trust for both parties.
-Features
+# 🛡️ Aptos Escrow Smart Contract - `VendorEscrow`
 
-Secure Escrow System: Safely holds funds until transaction conditions are satisfied
-Simple Interface: Only two core functions for creating and completing escrows
-Compact Implementation: Lightweight contract (45 lines) for efficient deployment and gas usage
-Status Tracking: Monitors the state of each escrow arrangement
+This project implements a simple **escrow system** on the Aptos blockchain using Move. It allows a buyer to deposit funds into an escrow, which can later be released to a vendor upon successful completion of a transaction.
 
-Smart Contract Structure
-The contract consists of the following key components:
-Escrow Structure
-movestruct Escrow has store, key {
-    buyer: address,
-    vendor: address,
-    amount: u64,
-    status: u8,
-}
-Status Constants
+---
 
-STATUS_PENDING: Escrow has been created but not yet completed
-STATUS_COMPLETED: Escrow transaction has been successfully completed
-STATUS_REFUNDED: Escrow has been refunded (implementation placeholder)
+## 📦 Module
 
-Functions
+**`EscrowModule::VendorEscrow`**
 
-create_escrow
+---
 
-Creates a new escrow arrangement between buyer and vendor
-Locks buyer's funds in the contract until conditions are met
-Parameters:
+## 🚀 Features
 
-buyer: Signer reference for the buyer
-vendor_address: Address of the vendor to receive payment
-amount: Amount of AptosCoin to be held in escrow
+- ✅ Buyers can initiate an escrow by depositing Aptos tokens (`APT`)
+- ✅ Funds are locked in an `Escrow` struct under the buyer’s address
+- ✅ Buyer can complete the transaction to release funds to the vendor
+- 🔐 Basic status management to track escrow state (`Pending`, `Completed`, `Refunded`)
+- ⚠️ Error handling for invalid states or unauthorized access
+
+---
 
 
+---
 
+## 🧠 How It Works
 
-complete_escrow
+### `create_escrow(buyer: &signer, vendor_address: address, amount: u64)`
 
-Releases funds to the vendor when called by the buyer
-Marks the escrow as completed
-Parameters:
+- Called by the **buyer**
+- Transfers `amount` of `APT` tokens from buyer
+- Stores a new `Escrow` object under the buyer's address
 
-caller: Signer reference for the caller (must be the buyer)
-buyer_address: Address where the escrow is stored
+### `complete_escrow(caller: &signer, buyer_address: address)`
 
+- Called by the **buyer**
+- Validates escrow is still `Pending`
+- Transfers `APT` tokens to the vendor
+- Updates the status to `Completed`
 
+---
 
+## 📜 Sample Deployment Commands
 
+### Compile the module
 
-How to Use
-Prerequisites
+```bash
+aptos move compile
+aptos move publish --profile default
+'''
 
-Aptos CLI installed
-An Aptos account with sufficient APT tokens
-
-Deployment
-
-Compile the module:
-
-bashaptos move compile --named-addresses EscrowModule=<YOUR_ADDRESS>
-
-Publish the module:
-
-bashaptos move publish --named-addresses EscrowModule=<YOUR_ADDRESS>
-Creating an Escrow
-bashaptos move run --function-id <YOUR_ADDRESS>::VendorEscrow::create_escrow \
-  --args address:<VENDOR_ADDRESS> u64:<AMOUNT>
-Completing an Escrow (as buyer)
-bashaptos move run --function-id <YOUR_ADDRESS>::VendorEscrow::complete_escrow \
-  --args address:<BUYER_ADDRESS>
-Security Considerations
-
-The contract implements basic authorization checks to ensure only appropriate parties can perform actions
-Error handling is implemented for common failure cases
-Funds are securely managed using Aptos's native coin module
-
-Future Enhancements
-Potential improvements for future versions:
-
-Add refund functionality for buyers
-Implement arbitration for dispute resolution
-Add time-based automatic completion or refund
-Support for multiple token types beyond AptosCoin
-
-License
-MIT License
-Disclaimer
-This code is provided as a reference implementation. It has not been audited for production use. Use at your own risk.
